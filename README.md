@@ -37,4 +37,4 @@ Due to file size, the main simulation Python Jupyter Notebook file can be downlo
 
 ## 📄 Project Report
 You can read the full project report here:  
-[Mechanics_Final_Project_Report.pdf](Mechanics_Final_Project_Report.pdf)
+[Mechanics_Final_Project_Report.pdf](Mechanics_Final_Project_Report__2_.pdf)
