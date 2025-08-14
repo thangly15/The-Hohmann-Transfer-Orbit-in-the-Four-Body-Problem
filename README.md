@@ -34,3 +34,7 @@ _Approach:_
 ## Download Simulation File
 Due to file size, the main simulation Python Jupyter Notebook file can be downloaded here:
 [Google Drive Link](https://drive.google.com/file/d/1RDY3o3lzgROMbpHHYtOw-tpjl-IYPSl7/view?usp=drive_link)
+
+## 📄 Project Report
+You can read the full project report here:  
+[Mechanics_Final_Project_Report.pdf](Mechanics_Final_Project_Report.pdf)
