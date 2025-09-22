@@ -39,7 +39,7 @@ Due to file size, the main simulation Python Jupyter Notebook file can be downlo
 You can preview & download the full project report here:  
 [Download the Report](Mechanics_Final_Project_Report__2_.pdf)
 
-**Acknowledgement**
+##Acknowledgement
 Thank you to the PHY-234 (Mechanics) class at Grinnell College for giving me the knowledge and opportunity to create this work. I especially thank my partner, Keaton Fitzgerald, for the work and input. 
 
 
