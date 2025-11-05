@@ -1,0 +1,296 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+% Tau
+% LaTeX Template
+% Version 2.4.4 (28/02/2025)
+%
+% Author: 
+% Guillermo Jimenez (memo.notess1@gmail.com)
+% 
+% License:
+% Creative Commons CC BY 4.0
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper,twocolumn,twoside]{tau-class/tau}
+\usepackage[english]{babel}
+
+%% Spanish babel recomendation
+% \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel} 
+
+%% Draft watermark
+% \usepackage{draftwatermark}
+
+%----------------------------------------------------------
+% TITLE
+%----------------------------------------------------------
+
+\journalname {Mechanics Physics Final Project Report}
+\title{The Hohmann Transfer Orbit in the "Four-Body" Problem}
+
+%----------------------------------------------------------
+% AUTHORS, AFFILIATIONS AND PROFESSOR
+%----------------------------------------------------------
+
+\author {Timmy Ly \& Keaton Fitzgerald}
+%----------------------------------------------------------
+% FOOTER INFORMATION
+%----------------------------------------------------------
+
+\institution{Grinnell College}
+\theday{May 17, 2025}
+\leadauthor{Timmy L., Keaton F.}
+\course{PHY-234L}
+
+%----------------------------------------------------------
+% ABSTRACT AND KEYWORDS
+%----------------------------------------------------------
+
+\begin{abstract}    
+    In this project, we will introduce the Hohmann Transfer Orbit through the "four-body" problem by examining the three-body problem and incorporating orbits using a Python simulation. A basic definition of the Hohmann Transfer Orbit is that it is the maneuver that transfers spacecraft from one orbit to another. The "three-body" problem is where three masses move and interact within their Newtonian gravitational potential, which can create an orbital movement between masses, or even chaos. From this basic definition, we try to simulate an environment where the sun will act as a center of mass with the Earth and the Asteroid orbiting it like a "three-body" problem. From the observation of the "three-body" problem, we will replace the asteroids with Mars to orbit the Sun, and also introduce a rocket launched from Earth that will move out of Earth's orbit and enter Mars' orbit. This project extends the classical "two-body" problem to a more realistic "four-body" scenario while using the Hohmann Transfer Orbit Theory. Our implementation combines numerical integration of gravitational interactions, and velocity changes maneuvers for Rocket Ship to enter the Mars' Orbit.
+\end{abstract}
+
+%----------------------------------------------------------
+
+\begin{document}
+		
+    \maketitle 
+    \thispagestyle{firststyle} 
+    \tauabstract 
+    % \tableofcontents
+    % \linenumbers 
+%----------------------------------------------------------
+\section{Background Information}
+    \subsection{Testing Case}
+
+    \taustart{W}ith the \textit{three-body} problem, first, we would need testing codes so we can visualize and understand the three-body problem with three masses. To be able to do this, we need three masses and ICs (initial conditions) to start setting up the test case for this project. Therefore, we have chosen our gravitational constant to be 1.0 and assigned the mass of the Sun, Earth, and one more mass that we call asteroids.
+	
+    Next, we need to configure the ICs for the system. The Sun would be the center of mass at 10 arbitrary units. Therefore, it should remain in the middle of the orbit. So its ICs position is (0,0) and its velocity in the x and y directions are also (0,0) since it is not moving. Therefore, the Sun remains in the middle as the Earth approaches. However, in our testing case, we let the Sun not align in the middle of the Earth's orbit. Though we know this is not realistic, we wanted to see the systems of "three-body" better; we were not trying to create a realistic simulation here, yet.
+    Next, the Earth's mass is less than that of the Sun, so we assigned it 0.5 arbitrary units. The Earth would start at (7.5, 0), a little bit far from the Sun horizontally. Its velocity vector is (0,0.5).
+    Finally, the asteroids would be the third mass, with the least mass of all three, with $1^{-5}$ arbitrary units, less than the mass of Earth and much less than the Sun. The initial position of the Asteroid would be further away from the Sun at (15,0). And since we would want the asteroids to move further from outside, so its velocity vector would be (-0.5,0.5)
+
+    \subsection{Figures of the testing case}
+    
+    Fig. 1 shows the trajectory of three-body masses in the testing case
+       \begin{figure}[H]
+           \centering
+           \includegraphics[width=0.5\linewidth]{test case 2D.png}
+           \caption{2D Figure of the Test Case Projectile}
+           \label{fig:enter-label}
+       \end{figure}
+    
+    Fig. 2 shows the 3D image of the trajectories of the test case
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\linewidth]{3D testing case.png}
+            \caption{3D graph of testing case}
+            \label{fig:enter-label}
+        \end{figure}
+    
+
+\section{Observation \& Assumption}
+
+    From the testing case, we observed that the Sun's position is to the left of the Earth's and the asteroid's orbit, instead of in the middle, which is not very realistic. Furthermore, the projectiles of the asteroid are very unstable and inconsistent. Therefore, it would need to be addressed for our simulation for the asteroid to orbit the Sun at a fixed path. On the other hand, we successfully found the ICs that would allow the asteroid to enter and orbit the Sun beyond the Earth's orbit without clashing into each other or drifting off from the Sun's orbit. We also almost perfected the Earth's orbit around the Sun. 
+    
+    Based on what we observed in the testing case, we thought we would need to make a few adjustments to simulate our real orbits model. First, we want a system of orbits in which the Earth and the asteroid orbit the Sun without affecting each other's trajectory and remain constant. Second, we would want the Sun to be in the system's middle. And third, we would adjust the planets' masses so that they reflect the real-life scale of their masses. 
+
+    Furthermore, we will replace the asteroid with Mars in the "three-body" orbit system, so that we can simulate the Hohmann Transfer Orbit along the "four-body" problem to show the $1^{-8}$ arbitrary unit mass rocket's trajectory launched from Earth. 
+
+\section{Approach}
+
+    With Mars in place of the asteroid, Mars' new mass would be 0.05 arbitrary units. We also set the distance of Earth and Mars from the Sun at 5 and 15 units, respectively, with the Sun at origin (0,0). We also used the equation of orbital velocity to calculate the velocity of Earth's and Mars' orbits around the Sun. This will help us set up the new ICs for the model.
+
+    \subsection{System Models}
+    The system models for four masses: 
+    \begin{itemize}
+        \item Gravitational Constant G = 1.0 (normalized)
+        \item Sun ($M_{sun}$ = $10.0$ arbitrary units) at origin
+        \item Earth ($M_{Earth}$ = $0.5$) in circular orbit at $r_e = 5.0$
+        \item Mars ($M_{Mars}$ = $0.05$) in circular orbit at $r_m = 15.0$
+        \item Rocket Ship ($M_{Ship}$ = $0.05$) initially co-located with Earth
+        \item Epsillon $\epsilon$ = 0.1 (use in equation of three body system)
+    \end{itemize}
+    
+    \subsection{Orbital Velocities}
+    To calculate the initial circular orbit velocities of the Earth and Mars, we used the following equation:
+    % Requires: \usepackage{amsmath}
+    \begin{equation}
+    \omega_e = \sqrt{\frac{GM_{sun}}{r_{e}}}
+    \label{eq:orbital_velocity}
+\end{equation}
+
+\begin{itemize}
+    \item $\omega_e$: Velocity of Earth's orbit
+\item $r_{earth}$: distance of Earth from the Sun
+
+\item G: Gravitational Constant = 1
+\item $M_{sun}$: Mass of the sun
+\end{itemize}
+
+% Requires: \usepackage{amsmath}
+\begin{equation}
+    \omega_m = \sqrt{\frac{GM_{sun}}{r_{m}}}
+    \label{eq:orbital_velocity}
+\end{equation}
+
+\begin{itemize}
+\item $\omega_m$: Velocity of Mars' orbit
+\item $r_{Mars}$: distance of Mars from the Sun
+\item G: Gravitational Constant = 1
+\item $M_{sun}$: Mass of the sun
+\end{itemize}
+
+
+\subsection{Table of ICs}
+    Table 1 shows the ICs of the planets and rocket in the system. 
+    		
+        \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Object & Mass (M) & Velocity ($\omega$) & Position (r)\\
+        \hline
+        Sun & 10 & (0,0) & (0,0)\\
+        \hline
+        Earth & 0.5 & (0, ve) & (5,0)\\
+        \hline
+        Mars & 0.05 & (0, vm) & (15,0)\\
+        \hline
+        Rocket Ship & $1^{-8}$ & (0, ve) & (5,0) \\
+        \hline
+    \end{tabular}
+    \caption{ICs for the system}
+    \label{tab:label_placeholder}
+\end{table}
+\tabletext{Note: ve: Earth's orbital velocity; vm: Mars' orbital velocity; dv1: velocity for the first burn to escape Earth's orbit}
+			
+        
+\section{Equations \& Derivations}
+
+    To start tackling this project and create the wanted simulation, we set up a list of equations that we thought would be helpful. One of the most fundamental equation to help us tackle the orbits and gravitational interactions problems is the Newtonian Law of Gravitation: 
+    
+   % Requires: \usepackage{amsmath}
+
+\begin{equation}
+    \mathbf{F}_i = \sum_{j\neq i} \frac{Gm_im_j}{(\|\mathbf{r}_{ij}\| + \epsilon)^3} \mathbf{\vec{r}}_{ij}
+      \label{eq:newtonian_gravitation}
+\end{equation}
+
+where $\mathbf{r}_{ij} = \mathbf{r}_j - \mathbf{r}_i$ is the relative position and $\epsilon$  (a.k.a. the gravitational softening) that will ensure that the masses never experience any extremely close encounters. However, we can ignore epsilon in our calculation since it is too small.
+
+We then calculated the gravitational force on Earth by finding the sum of force on Earth affected by the Sun and the force on Earth affected by Mars. Mars' felt gravitational force is calculated the same way (Sun-Mars, Mars-Earth). And finally, the force on the Rocket Ship is the sum of gravitational force affected by: Sun-Ship, Earth-Ship, Mars-Ship.
+From there, we can achieve each acceleration of Earth, Mars, and Rocket with Newton's $2^{nd}$ Law:
+\begin{equation}
+    \vec{F} = ma
+    \label{Newton's $2^{nd}$ Law}
+\end{equation}
+
+Note: The Sun's acceleration = 0 since it stays still at origin
+
+\subsection{The Hohmann Transfer Orbits}
+
+1. \textbf{Transfer Acceleration} ($a_{transfer}$):
+
+ After getting acceleration for Earth, Mars, and Rocket Ship, we can utilize the Hohmann equations. The Hohmann transfer orbit is an elliptical orbit tangent to both the Earth's and Mars' orbits, with semi-major axis:
+
+ \begin{equation}
+    a_{\text{transfer}} = \frac{a_{\text{Earth}} + a_{\text{Mars}}}{2}
+\end{equation}
+
+After getting $a_{transfer}$, the Hohmann transfer requires burn/velocity change: 
+
+2. \textbf{Ship Velocity} $v_{ship}$):
+To find departure burn, we need to find velocity of the ship when transferring initially:
+\begin{equation}
+    v_{ship} = \sqrt{GM_{sun}\left(\frac{2}{r_e} - \frac{1}{a_{transfer}}\right)} 
+    \label{Equation of Departure Burn/Velocity}
+\end{equation}
+
+Then, we calculate the half-period using Kepler's $3^{rd}$ Law:
+\begin{equation}
+    T_{half} = \pi\sqrt\frac{{{a_{transfer}}^3}}{GM_{sun}}
+\end{equation}
+
+We utilized this equation to compute half the period analytically to create an upper bound to limit the ship's path so it stops when it reaches Mars' orbit and does not go further than the orbit. Also, this help us to match the phase of the ship with Mars.
+\section{Limit Conditions}
+
+    \subsection{Matching Motion}
+	
+        Once we have everything set up, we would consider the conditions to limit. Once the ship reaches the radius or the orbital path of mars we want it to match the motion of the mars orbit. Therefore, we set the phase limit
+        \begin{lstlisting}
+[def mars_orbit_event(t, y):
+return np.hypot(y[0], y[1]) - r_mars
+mars_orbit_event.terminal  = True
+mars_orbit_event.direction = 1]
+        \end{lstlisting}
+
+      
+
+for the ship to stay in the Mars' orbit. How this works is the np.hypot(y[0], y[1]) will computes to find $r_{ship}$ (distance between ship and the sun): \begin{equation}
+    \sqrt{x^2+y^2}
+\end{equation}
+
+From there, we find the difference of the distance of the ship and Mars:
+\begin{equation}
+    r = r_{ship} -r_m
+\end{equation}
+
+So that when this equation crosses 0, the ship is exactly aligned with Mars' orbit
+
+Furthermore, we also choose the specific phase for Mars to meet the ship. We know that the ship will meet Mars after $t_{arrival}$ and we choose the ship to meet with Mars at $\theta_{ship}$ $\approx$ $\pi$ (Far side of the Sun on Hohmann Transfer). Therefore, to make Mars having the same angular position when the ship arrives at the orbital, we pick Mars' starting phase $\phi_{m0}$:
+\begin{equation}
+    \theta_{Mars}(t_{arrival}) = \phi_{mo} + \omega_{m}(t_{arrival}) = \pi
+\end{equation}
+
+\begin{equation}
+=>    \phi_{m0} = \pi - \omega_{m}(t_{arrival})
+\end{equation}
+
+And we used the modulo (2*np.pi) to wrap the angle into the range (0,2$\pi$).
+Without this phase shift Mars could end up well ahead of or behind the ship when the transfer ends. 
+
+\section{Results}
+Our simulation successfully demonstrates the Hohmann Transfer Orbit, as shown in the 2D graph in Figure 3 and the 3D graph in Figure 4:
+    
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{2D final.png}
+    \caption{2D graph of Hohmann Transfer}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\linewidth]{Screen Shot 2025-05-13 at 8.11.05 AM.png}
+        \caption{3-D view of x/y position with z=0 of Hohmann Transfer}
+        \label{fig:enter-label}
+    \end{figure}    
+
+\section{Conclusion}
+This project modeled a simplified four-body system consisting of the Sun, Earth, Mars, and a rocket to simulate a Hohmann Transfer Orbit from Earth to Mars. Starting with the three-body problem framework, we extended the simulation to include the rocket’s motion and its interaction with gravitational forces. In our model, the Sun provided a central gravitational force, while Earth and Mars influenced only the rocket and not each other or the Sun. This simplification reduced computational complexity but introduced limitations, particularly in accurately representing mutual gravitational interactions between the planetary bodies. Despite these constraints, the simulation effectively demonstrated the process of a transfer maneuver and provided a baseline for understanding orbital motion in a multi-body system. Future models could address these limitations by incorporating full gravitational interactions among all bodies.
+
+\section{References}
+\begin{itemize}
+
+\item We used help from Professor Jane Bright on the recommendations of the use of the Newtonian Gravity Equation.
+
+\item We used reference from the PHY-234 labs "Three-body" and "Orbits" to guide us through this project. 
+
+\item We used \textit{Classical Mechanics} textbook by John R. Taylor for the equations.
+
+\item We used reference animation from NASA website: https://science.nasa.gov/learn/basics-of-space-flight/chapter4-1/
+\end{itemize}
+
+And equations for Hohmann Transfer is adapted from the URLs: 
+
+1. \href{https://courses.physics.ucsd.edu/2019/Winter/physics141/Assignments/Hohmann1.pdf} {UCSD Lecture} 
+
+2. \href{https://dspace.mit.edu/bitstream/handle/1721.1/60691/16-07-fall-2004/contents/lecture-notes/d30.pdf} {MIT Lecture}
+
+%----------------------------------------------------------
+
+\printbibliography
+
+%----------------------------------------------------------
+
+\end{document}
