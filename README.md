@@ -32,8 +32,9 @@ _Approach:_
 - UCSD & MIT Lecture Notes on Orbital Transfers
 
 ## Download Simulation Python File
-Available here: ['Homanntrans_latest__.ipynb'](Homanntrans_latest__.ipynb/)
-Due to file size, the main simulation Python Jupyter Notebook file can be downloaded here:
+- Available here: ['Homanntrans_latest__.ipynb'](Homanntrans_latest__.ipynb/).
+
+- In case of file size is too big, the main simulation Python Jupyter Notebook file can be downloaded here:
 [Google Drive Link](https://drive.google.com/file/d/1RDY3o3lzgROMbpHHYtOw-tpjl-IYPSl7/view?usp=drive_link)
 
 ## 📄 Project Report
